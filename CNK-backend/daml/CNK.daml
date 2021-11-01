@@ -1,0 +1,87 @@
+-- Copyright (c) 2021 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+
+
+module CNK where
+
+
+data CNKUserKey = CNKUserKey with
+  useradmin: Party
+  username: Text
+    deriving (Eq, Show)
+
+
+template CNKUser
+  with
+    owner : Party
+    username: Text
+    useradmin: Party -- gives authorization to the owner to become part of the network.
+    balance: Decimal
+  where
+    signatory useradmin
+    key CNKUserKey with
+      username
+      useradmin
+        : CNKUserKey
+    maintainer key.useradmin
+    controller owner can
+      ProposeTransfer: (ContractId TransferProposal, ContractId CNKUser) -- nonconsuming and then use self
+        with
+          receiverParty: Party -- ESTO DEBE SER PARTY SI O SI! SOLO DEBO CONOCER A QUIEN QUIERO MANDARLE, NO SU CUENTA!
+          amount: Decimal
+        do
+          tp <- create TransferProposal with
+            senderCNKUser = this
+            ..
+
+          updatedUserAfterMoneyDeduction <- create this with
+            balance = balance - amount
+
+          return(tp, updatedUserAfterMoneyDeduction)
+           
+      AcceptTransfer: (ContractId CNKUser)
+        with
+          transferProposalCid: ContractId TransferProposal
+        do
+          transferProposal <- fetch transferProposalCid
+          assertMsg ("You can only accept transfers directed to you") (owner == transferProposal.receiverParty)
+          exercise transferProposalCid AcceptProposal
+          
+          create this with balance = balance + transferProposal.amount
+
+      CancelTransferProposal: (ContractId CNKUser)
+        with 
+          transferProposalCid: ContractId TransferProposal
+        do
+          transferProposal <- fetch transferProposalCid
+          assertMsg ("You can only archive TransferProposals you created") (owner == transferProposal.senderCNKUser.owner)
+          exercise transferProposalCid CancelProposal
+          
+          create this with balance = balance + transferProposal.amount
+          
+      ArchiveCNKUser: ()
+        do 
+          assertMsg ("Can't archive user if balance is non-zero, please transfer remaining funds to another party") (balance == 0.0)
+          return()
+
+template TransferProposal
+  with
+    senderCNKUser: CNKUser -- ContractId
+    receiverParty: Party -- ContractId ESTO TIENE QUE SER PARTY
+    amount: Decimal
+  where
+    signatory senderCNKUser.owner
+    -- Sender has to propose sending positive balance and available balance.
+
+    -- TODO: Si se necesita, poner como observador al useradmin (sacarlo de senderCNKUser) para trazabilidad de las transacciones.
+    ensure amount > 0.0 && amount <= senderCNKUser.balance && (senderCNKUser.owner /= receiverParty)
+    controller receiverParty can
+      AcceptProposal: ()
+        do return()
+    controller senderCNKUser.owner can
+      CancelProposal: ()
+        do return()
+        
+
+
+

@@ -1,0 +1,24 @@
+module UserAdmin where
+import CNK
+
+-- without nonconsuming, this issuer could only mint one NFT and then would get archived. 
+
+template CNKUserRequest
+  with
+    owner: Party
+    useradmin: Party
+    username: Text
+    reason: Text
+
+  where
+    signatory owner
+    observer useradmin
+    controller useradmin can
+      GrantCNKUserRights: ContractId CNKUser
+        with
+          balance: Decimal
+        do
+          create CNKUser with ..
+
+      RejectCNKUserRequest: ()
+        do return ()

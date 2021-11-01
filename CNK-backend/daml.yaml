@@ -1,0 +1,17 @@
+sdk-version: 1.17.1
+name: CNK
+source: daml
+version: 1.0.1
+parties:
+- Carlos
+- Jorge
+- Admin
+- Outsider
+init-script: Main:direct_transfer_CNK_test
+dependencies:
+  - daml-prim
+  - daml-stdlib
+  - daml-script
+sandbox-options:
+  - --wall-clock-time
+  - --ledgerid=CNK

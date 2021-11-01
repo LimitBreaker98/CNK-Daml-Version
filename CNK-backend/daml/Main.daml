@@ -1,0 +1,217 @@
+module Main where
+import CNK
+import Daml.Script
+import UserAdmin
+
+-- File where we write scripts for validating the workflows and business logic of our Daml app.
+
+direct_transfer_CNK_test : Script ()
+direct_transfer_CNK_test = do
+  carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
+  jorge <- allocatePartyWithHint "Jorge" (PartyIdHint "Jorge")
+  dptoIndustrialUniandesAdmin <- allocatePartyWithHint "Admin" (PartyIdHint "Admin")
+
+  -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
+  -- to be a Contract Id. This can be used to fetch the actual contract.
+  -- METHOD: Some newContact <- queryContractId owner newContactCid
+
+
+  -- Create CNKUser for both parties
+  carlosCNKUserCid <- submit dptoIndustrialUniandesAdmin do
+    createCmd CNKUser with
+      owner = carlos
+      username = "cf.infante@uniandes.edu.co"
+      useradmin = dptoIndustrialUniandesAdmin
+      balance = 100.00
+
+  -- Create CNKUser for both parties
+  jorgeCNKUserCid <- submit dptoIndustrialUniandesAdmin do
+    createCmd CNKUser with
+      owner = jorge
+      username = "ja.esguerra@uniandes.edu.co"
+      useradmin = dptoIndustrialUniandesAdmin
+      balance = 30.00
+
+  -- Carlos creates TransferProposal to send CNK to Jorge
+  (tpCid, updatedAliceCNKUserCid) <- submit carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = jorge
+        amount = 20.00
+  
+  -- Fetching the transfer proposal
+  Some tp <- queryContractId carlos tpCid
+
+
+  -- Jorge will now accept the payment, effectively overwriting (creating as new, with updates) his CNKUser Contract.
+  updatedjorgeCNKUserCid <- submit jorge do
+    exerciseCmd jorgeCNKUserCid AcceptTransfer
+      with
+        transferProposalCid = tpCid
+
+  pure()
+
+
+outside_parties_requesting_access_scenario : Script ()
+outside_parties_requesting_access_scenario = do
+  outsider_1 <- allocateParty "Outsider_1"
+  outsider_2 <- allocateParty "Outsider_2"
+  carlos <- allocateParty "Carlos"
+  uniandesAdmin <- allocateParty "Admin"
+
+  -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
+  -- to be a Contract Id. This can be used to fetch the actual contract.
+  -- METHOD: Some newContact <- queryContractId owner newContactCid
+
+  outsider_1_CNKUserRequestCid <- submit outsider_1 do
+    createCmd CNKUserRequest with
+      owner = outsider_1
+      useradmin = uniandesAdmin
+      username = "Outsider_1@gmail.com"
+      reason = "Quiero hacer parte de la red CNK :D "
+  
+  outsider_2_CNKUserRequestCid <- submit outsider_2 do
+    createCmd CNKUserRequest with
+      owner = outsider_2
+      useradmin = uniandesAdmin
+      username = "Outsider_2@gmail.com"
+      reason = "Quiero hacer parte de la red CNK también! "
+
+  outsider_1_CNKUserCid <- submit uniandesAdmin do
+    exerciseCmd outsider_1_CNKUserRequestCid GrantCNKUserRights
+      with
+        balance = 30.00
+        ..
+  submit uniandesAdmin do
+    exerciseCmd outsider_2_CNKUserRequestCid RejectCNKUserRequest
+  
+
+
+  -- Create CNKUser for both parties
+  carlosCNKUserCid <- submit uniandesAdmin do
+    createCmd CNKUser with
+      owner = carlos
+      username = "cf.infante@uniandes.edu.co"
+      useradmin = uniandesAdmin
+      balance = 100.00
+
+  -- Carlos creates TransferProposal to send CNK to outsider_1
+  (tpCid, updatedAliceCNKUserCid) <- submit carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = outsider_1
+        amount = 20.00
+  
+
+  -- outsider_1 will now accept the payment, effectively overwriting (creating as new, with updates) his CNKUser Contract.
+  updatedOutsider_1_CNKUserCid <- submit outsider_1 do
+    exerciseCmd outsider_1_CNKUserCid AcceptTransfer
+      with
+        transferProposalCid = tpCid
+
+
+  pure()
+  
+
+failure_scenarios_checks : Script ()
+failure_scenarios_checks = do
+  jorge <- allocateParty "Jorge"
+  carlos <- allocateParty "Carlos"
+  outsider_1 <- allocateParty "Outsider_1"
+  outsider_2 <- allocateParty "Outsider_2"
+  uniandesAdmin <- allocateParty "Admin"
+
+  outsider_1_CNKUserRequestCid <- submit outsider_1 do
+    createCmd CNKUserRequest with
+      owner = outsider_1
+      useradmin = uniandesAdmin
+      username = "Outsider_1@gmail.com"
+      reason = "Quiero hacer parte de la red CNK :D "
+  
+  outsider_2_CNKUserRequestCid <- submit outsider_2 do
+    createCmd CNKUserRequest with
+      owner = outsider_2
+      useradmin = uniandesAdmin
+      username = "Outsider_2@gmail.com"
+      reason = "Quiero hacer parte de la red CNK también! "
+  
+  carlosCNKUserCid <- submit uniandesAdmin do
+    createCmd CNKUser with
+      owner = carlos
+      username = "cf.infante@uniandes.edu.co"
+      useradmin = uniandesAdmin
+      balance = 100.00
+
+  jorgeCNKUserCid <- submit uniandesAdmin do
+    createCmd CNKUser with
+      owner = jorge
+      username = "ja.esguerra@uniandes.edu.co"
+      useradmin = uniandesAdmin
+      balance = 30.00
+
+  -- Failure: the party soliciting access to the network can't autoapprove it.
+  submitMustFail outsider_1 do
+    exerciseCmd outsider_1_CNKUserRequestCid GrantCNKUserRights
+      with
+        balance = 20.00
+        ..
+
+  outsider_1_CNKUserCid <- submit uniandesAdmin do
+    exerciseCmd outsider_1_CNKUserRequestCid GrantCNKUserRights
+      with
+        balance = 20.00
+        ..
+  submit uniandesAdmin do
+    exerciseCmd outsider_2_CNKUserRequestCid RejectCNKUserRequest
+  
+  -- Failure: ProposeTransfer choice fails if amount > CNKUser.balance
+  submitMustFail carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = outsider_1
+        amount = 110.00
+  
+  -- Failure: ProposeTransfer choice fails if amount <= 0.0
+  submitMustFail carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = outsider_1
+        amount = 0.0
+
+  submitMustFail carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = outsider_1
+        amount = -20.00
+    
+  -- Failure: ProposeTransfer choice fails if sender is equal to receiving party
+  submitMustFail carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = carlos
+        amount = 50.00
+  
+
+  (tpCid, updatedAliceCNKUserCid) <- submit carlos do
+    exerciseCmd carlosCNKUserCid ProposeTransfer
+      with
+        receiverParty = outsider_1
+        amount = 50.00
+
+  -- Fetching the transfer proposal
+  Some tp <- queryContractId carlos tpCid
+
+
+  -- Failure: jorge Can Not Accept the TransferProposal sent by carlos to outsider_1
+  submitMustFail jorge do
+    exerciseCmd outsider_1_CNKUserCid AcceptTransfer
+      with
+        transferProposalCid = tpCid
+
+  -- Success: outsider_1 accepts the transferProposal made by Carlos
+  updatedOutsider_1_CNKUserCid <- submit outsider_1 do
+    exerciseCmd outsider_1_CNKUserCid AcceptTransfer
+      with
+        transferProposalCid = tpCid
+  
+  pure()

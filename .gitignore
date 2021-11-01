@@ -1,0 +1,7 @@
+**/.DS_Store
+/CNK-frontend/build
+/CNK-frontend/node_modules
+/CNK-frontend/yarn.lock
+/CNK-backend/private-nft.dot
+/CNK-backend/private-nft.png
+/deploy
