@@ -54,7 +54,7 @@ template CNKUser
           transferProposalCid: ContractId TransferProposal
         do
           transferProposal <- fetch transferProposalCid
-          assertMsg ("You can only archive TransferProposals you created") (owner == transferProposal.senderCNKUser.owner)
+          assertMsg ("You can only cancel TransferProposals you created") (owner == transferProposal.senderCNKUser.owner)
           exercise transferProposalCid CancelProposal
           
           create this with balance = balance + transferProposal.amount
