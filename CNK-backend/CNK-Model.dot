@@ -1,0 +1,49 @@
+digraph G {
+compound=true;
+rankdir=LR;
+subgraph cluster_CNKUser{
+n0[label=Create][color=green]; 
+n1[label=ProposeTransfer][color=red]; 
+n2[label=AcceptTransfer][color=red]; 
+n3[label=CancelTransferProposal][color=red]; 
+n4[label=ArchiveCNKUser][color=red]; 
+n5[label=Archive][color=red]; 
+label=<<table align = "left" border="0" cellborder="0" cellspacing="1">
+<tr><td align="center"><b>CNKUser</b></td></tr><tr><td align="left">owner</td></tr> 
+<tr><td align="left">username</td></tr> 
+<tr><td align="left">useradmin</td></tr> 
+<tr><td align="left">balance</td></tr> 
+</table>>;color=blue
+}subgraph cluster_TransferProposal{
+n6[label=Create][color=green]; 
+n7[label=AcceptProposal][color=red]; 
+n8[label=Archive][color=red]; 
+n9[label=CancelProposal][color=red]; 
+label=<<table align = "left" border="0" cellborder="0" cellspacing="1">
+<tr><td align="center"><b>TransferProposal</b></td></tr><tr><td align="left">senderCNKUser.owner</td></tr> 
+<tr><td align="left">senderCNKUser.username</td></tr> 
+<tr><td align="left">senderCNKUser.useradmin</td></tr> 
+<tr><td align="left">senderCNKUser.balance</td></tr> 
+<tr><td align="left">receiverParty</td></tr> 
+<tr><td align="left">amount</td></tr> 
+</table>>;color=blue
+}subgraph cluster_CNKUserRequest{
+n10[label=Create][color=green]; 
+n11[label=GrantCNKUserRights][color=red]; 
+n12[label=Archive][color=red]; 
+n13[label=RejectCNKUserRequest][color=red]; 
+label=<<table align = "left" border="0" cellborder="0" cellspacing="1">
+<tr><td align="center"><b>CNKUserRequest</b></td></tr><tr><td align="left">owner</td></tr> 
+<tr><td align="left">useradmin</td></tr> 
+<tr><td align="left">username</td></tr> 
+<tr><td align="left">reason</td></tr> 
+</table>>;color=blue
+}n1->n0
+n1->n6
+n2->n0
+n2->n7
+n3->n0
+n3->n9
+n11->n0
+
+}

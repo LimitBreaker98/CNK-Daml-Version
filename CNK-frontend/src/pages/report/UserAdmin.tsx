@@ -32,32 +32,15 @@ export default function UserAdmin() {
 
   return (
     <>
-      <Typography>CNK Users</Typography>
+      <Typography>Solicitudes de ingreso a red CNK</Typography>
       <Table size="small">
         <TableHead>
           <TableRow className={classes.tableRow}>
-            <TableCell key={0} className={classes.tableCell}>Issuer</TableCell>
-            <TableCell key={1} className={classes.tableCell}>Revoke</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {cnkUsers.map(i => (
-            <TableRow key={i.contractId} className={classes.tableRow}>
-              <TableCell key={0} className={classes.tableCell}>{i.payload.owner}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <br />
-      <Typography>CNK Users Onboarding Requests</Typography>
-      <Table size="small">
-        <TableHead>
-          <TableRow className={classes.tableRow}>
-            <TableCell key={0} className={classes.tableCell}>New Owner</TableCell>
-            <TableCell key={1} className={classes.tableCell}>Reason</TableCell>
-            <TableCell key={2} className={classes.tableCell}>User Name</TableCell>
-            <TableCell key={3} className={classes.tableCell}>Approve</TableCell>
-            <TableCell key={4} className={classes.tableCell}>Reject</TableCell>
+            <TableCell key={0} className={classes.tableCell}>Solicitante</TableCell>
+            <TableCell key={1} className={classes.tableCell}>Razón</TableCell>
+            <TableCell key={2} className={classes.tableCell}>Nombre de Usuario</TableCell>
+            <TableCell key={3} className={classes.tableCell}>Aprobar</TableCell>
+            <TableCell key={4} className={classes.tableCell}>Rechazar</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,11 +48,11 @@ export default function UserAdmin() {
             <TableRow key={i.contractId} className={classes.tableRow}>
               <TableCell key={0} className={classes.tableCell}>{i.payload.owner}</TableCell>
               <TableCell key={1} className={classes.tableCell}>{i.payload.reason}</TableCell>
-              <TableCell key={1} className={classes.tableCell}>{i.payload.username}</TableCell>
-              <TableCell key={2} className={classes.tableCellButton}>
+              <TableCell key={2} className={classes.tableCell}>{i.payload.username}</TableCell>
+              <TableCell key={3} className={classes.tableCellButton}>
                 <Button color="primary" size="small" className={classes.choiceButton} variant="contained" onClick={() => justApproveCNKUser(i)}>Approve</Button>
               </TableCell>
-              <TableCell key={3} className={classes.tableCellButton}>
+              <TableCell key={4} className={classes.tableCellButton}>
                 <Button color="primary" size="small" className={classes.choiceButton} variant="contained" onClick={() => justRejectCNKUser(i)}>Reject</Button>
               </TableCell>
             </TableRow>

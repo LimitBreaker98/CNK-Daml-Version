@@ -23,7 +23,7 @@ const Login = (props : RouteComponentProps) => {
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
         <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>Private Nfts</Typography>
+        <Typography className={classes.logotypeText}>Red CNK V1.0.1</Typography>
       </div>
       <div className={classes.formContainer}>
         <div className={classes.form}>

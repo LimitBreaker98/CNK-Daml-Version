@@ -16,7 +16,7 @@ export default function App() {
         <Route
           exact
           path="/app"
-          render={() => <Redirect to="/app/mytokens" />}
+          render={() => <Redirect to="/app/my-transfer-proposals" />}
         />
         <PrivateRoute path="/app" component={Layout} />
         <PublicRoute path="/login" component={Login} />

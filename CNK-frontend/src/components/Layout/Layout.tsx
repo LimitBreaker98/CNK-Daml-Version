@@ -7,9 +7,8 @@ import Report from "../../pages/report/MyTransferProposals";
 import { useUserState } from "../../context/UserContext";
 import { wsBaseUrl, httpBaseUrl } from "../../config";
 import useStyles from "./styles";
-import MyWorks from "../../pages/report/MyWorks";
-import MyTokens from "../../pages/report/MyT";
-import Payments from "../../pages/report/Payments";
+import MyCnkUser from "../../pages/report/MyCNKUser";
+import MyTransferProposals from "../../pages/report/MyTransferProposals";
 import UserAdmin from "../../pages/report/UserAdmin";
 
 const Layout = () => {
@@ -28,9 +27,8 @@ const Layout = () => {
               <div className={classes.content}>
                 <div className={classes.fakeToolbar} />
                 <Switch>
-                  <Route path="/app/myworks" component={MyWorks} />
-                  <Route path="/app/mytokens" component={MyTokens} />
-                  <Route path="/app/payments" component={Payments} />
+                  <Route path="/app/my-cnk-user" component={MyCnkUser} />
+                  <Route path="/app/my-transfer-proposals" component={MyTransferProposals} />
                   <Route path="/app/useradmin" component={UserAdmin} />
                 </Switch>
               </div>

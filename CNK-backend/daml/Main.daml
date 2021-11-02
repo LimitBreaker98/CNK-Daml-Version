@@ -9,7 +9,7 @@ direct_transfer_CNK_test : Script ()
 direct_transfer_CNK_test = do
   carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
   jorge <- allocatePartyWithHint "Jorge" (PartyIdHint "Jorge")
-  dptoIndustrialUniandesAdmin <- allocatePartyWithHint "Admin" (PartyIdHint "Admin")
+  dptoIndustrialUniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
 
   -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
   -- to be a Contract Id. This can be used to fetch the actual contract.
@@ -54,10 +54,10 @@ direct_transfer_CNK_test = do
 
 outside_parties_requesting_access_scenario : Script ()
 outside_parties_requesting_access_scenario = do
-  outsider_1 <- allocateParty "Outsider_1"
-  outsider_2 <- allocateParty "Outsider_2"
-  carlos <- allocateParty "Carlos"
-  uniandesAdmin <- allocateParty "Admin"
+  outsider_1 <- allocatePartyWithHint "Outsider_1" (PartyIdHint "Outsider_1")
+  outsider_2 <- allocatePartyWithHint "Outsider_2" (PartyIdHint "Outsider_2")
+  carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
+  uniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
 
   -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
   -- to be a Contract Id. This can be used to fetch the actual contract.
@@ -108,18 +108,16 @@ outside_parties_requesting_access_scenario = do
     exerciseCmd outsider_1_CNKUserCid AcceptTransfer
       with
         transferProposalCid = tpCid
-
-
   pure()
   
 
 failure_scenarios_checks : Script ()
 failure_scenarios_checks = do
-  jorge <- allocateParty "Jorge"
-  carlos <- allocateParty "Carlos"
-  outsider_1 <- allocateParty "Outsider_1"
-  outsider_2 <- allocateParty "Outsider_2"
-  uniandesAdmin <- allocateParty "Admin"
+  jorge <- allocatePartyWithHint "Jorge" (PartyIdHint "Jorge")
+  carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
+  outsider_1 <- allocatePartyWithHint "Outsider_1" (PartyIdHint "Outsider_1")
+  outsider_2 <- allocatePartyWithHint "Outsider_2" (PartyIdHint "Outsider_2")
+  uniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
 
   outsider_1_CNKUserRequestCid <- submit outsider_1 do
     createCmd CNKUserRequest with

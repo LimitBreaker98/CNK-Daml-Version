@@ -13,7 +13,6 @@ import { MonetizationOn, SupervisorAccount, Image } from "@material-ui/icons";
 
 type SidebarLinkProps = {
   path : string
-  icon : JSX.Element
   label : string
   location : Location<unknown>
 }
@@ -24,23 +23,21 @@ const Sidebar = ({ location } : RouteComponentProps) => {
   return (
     <Drawer open variant="permanent" className={classes.drawer} classes={{ paper: classes.drawer }}>
       <div className={classes.toolbar} />
-      <List style={{ width: "100%" }}>
-        <SidebarLink key={0} label="My Tokens" path="/app/mytokens" icon={(<LocalPlay />)} location={location} />
-        <SidebarLink key={1} label="My Works" path="/app/myworks" icon={(<Image />)} location={location} />
-        <SidebarLink key={2} label="Payments" path="/app/payments" icon={(<MonetizationOn />)} location={location} />
-        <SidebarLink key={3} label="User Admin" path="/app/useradmin" icon={(<SupervisorAccount />)} location={location} />
+      <List style={{ width: "50%" }}>
+        <SidebarLink key={0} label="My Transfer Proposals" path="/app/my-transfer-proposals" location={location} />
+        <SidebarLink key={1} label="My CNK User" path="/app/my-cnk-user" location={location} />
+        <SidebarLink key={2} label="User Admin" path="/app/useradmin" location={location} />
       </List>
     </Drawer>
   );
 };
 
-const SidebarLink = ({ path, icon, label, location } : SidebarLinkProps) => {
+const SidebarLink = ({ path, label, location } : SidebarLinkProps) => {
   const classes = useStyles();
   const active = path && (location.pathname === path || location.pathname.indexOf(path) !== -1);
 
   return (
-    <ListItem button component={Link} to={path} className={classes.link} classes={{ root: active ? classes.linkActive : classes.linkRoot }} disableRipple>
-      <ListItemIcon className={active ? classes.linkIconActive : classes.linkIcon}>{icon}</ListItemIcon>
+    <ListItem button component={Link} to={path} className={classes.link} classes={{ root: active ? classes.linkActive : classes.linkRoot }}>
       <ListItemText classes={{ primary: active ? classes.linkTextActive : classes.linkText }} primary={label} />
     </ListItem>
   );
