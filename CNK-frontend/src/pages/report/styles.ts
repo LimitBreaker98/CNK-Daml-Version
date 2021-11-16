@@ -7,6 +7,20 @@ export default makeStyles((theme : any) => createStyles({
     paddingBottom: 6,
     fontSize: "0.75rem"
   },
+  tableHeader: {
+    verticalAlign: "top",
+    paddingTop: 4,
+    paddingBottom: 4,
+    fontSize: "1.00rem",
+    fontWeight: "bold"
+  },
+  tableTitle: {
+    verticalAlign: "top",
+    paddingTop: 6,
+    paddingBottom: 6,
+    fontSize: "1.10rem",
+    fontWeight: "bold"
+  },
   tableCellButton: {
     verticalAlign: "center",
     paddingTop: 0,

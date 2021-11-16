@@ -39,7 +39,7 @@ exports.AcceptProposal = {
 
 
 exports.TransferProposal = {
-  templateId: 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd:CNK:TransferProposal',
+  templateId: 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5:CNK:TransferProposal',
   keyDecoder: damlTypes.lazyMemo(function () { return jtv.constant(undefined); }),
   keyEncode: function () { throw 'EncodeError'; },
   decoder: damlTypes.lazyMemo(function () { return jtv.object({senderCNKUser: exports.CNKUser.decoder, receiverParty: damlTypes.Party.decoder, amount: damlTypes.Numeric(10).decoder, }); }),
@@ -131,7 +131,7 @@ exports.ProposeTransfer = {
 
 
 exports.CNKUser = {
-  templateId: 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd:CNK:CNKUser',
+  templateId: 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5:CNK:CNKUser',
   keyDecoder: damlTypes.lazyMemo(function () { return damlTypes.lazyMemo(function () { return exports.CNKUserKey.decoder; }); }),
   keyEncode: function (__typed__) { return exports.CNKUserKey.encode(__typed__); },
   decoder: damlTypes.lazyMemo(function () { return jtv.object({owner: damlTypes.Party.decoder, username: damlTypes.Text.decoder, useradmin: damlTypes.Party.decoder, balance: damlTypes.Numeric(10).decoder, }); }),

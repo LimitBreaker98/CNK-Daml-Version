@@ -9,4 +9,4 @@ var CNK = require('./CNK');
 exports.CNK = CNK;
 var UserAdmin = require('./UserAdmin');
 exports.UserAdmin = UserAdmin;
-exports.packageId = 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd';
+exports.packageId = 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5';

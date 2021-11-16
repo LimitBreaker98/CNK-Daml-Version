@@ -35,7 +35,7 @@ export declare type TransferProposal = {
 };
 
 export declare const TransferProposal:
-  damlTypes.Template<TransferProposal, undefined, 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd:CNK:TransferProposal'> & {
+  damlTypes.Template<TransferProposal, undefined, 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5:CNK:TransferProposal'> & {
   AcceptProposal: damlTypes.Choice<TransferProposal, AcceptProposal, {}, undefined>;
   Archive: damlTypes.Choice<TransferProposal, pkgd14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662.DA.Internal.Template.Archive, {}, undefined>;
   CancelProposal: damlTypes.Choice<TransferProposal, CancelProposal, {}, undefined>;
@@ -98,7 +98,7 @@ export declare type CNKUser = {
 };
 
 export declare const CNKUser:
-  damlTypes.Template<CNKUser, CNKUser.Key, 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd:CNK:CNKUser'> & {
+  damlTypes.Template<CNKUser, CNKUser.Key, 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5:CNK:CNKUser'> & {
   ProposeTransfer: damlTypes.Choice<CNKUser, ProposeTransfer, pkg40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7.DA.Types.Tuple2<damlTypes.ContractId<TransferProposal>, damlTypes.ContractId<CNKUser>>, CNKUser.Key>;
   AcceptTransfer: damlTypes.Choice<CNKUser, AcceptTransfer, damlTypes.ContractId<CNKUser>, CNKUser.Key>;
   CancelTransferProposal: damlTypes.Choice<CNKUser, CancelTransferProposal, damlTypes.ContractId<CNKUser>, CNKUser.Key>;

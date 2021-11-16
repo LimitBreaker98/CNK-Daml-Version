@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -6,36 +6,54 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import Button from "@material-ui/core/Button";
 import Ledger from "@daml/ledger";
-import { useLedger, useParty, useStreamQueries} from "@daml/react";
+import { OnBoarding } from "../report/OnBoarding"
+import { useLedger, useParty, useStreamQueries } from "@daml/react";
 import { ContractId } from "@daml/types";
 import { CNKUser, TransferProposal } from "@daml.js/CNK-1.0.1/lib/CNK";
 import useStyles from "./styles";
 import * as damlTypes from '@daml/types';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
 
-type TransferProposalVariableInputs = {
-  receiverParty: damlTypes.Party;
-  amount: damlTypes.Numeric;
-};
 
-export default function MyCNKUser() {  // TODO: Rename
+export default function MyCNKUser() {
   const classes = useStyles();
-  const party = useParty(); // Take current party :)
-  const ledger : Ledger = useLedger(); // used for the writing stream process. Realization of the ledger from the POV of the party.
   const cnkUserContracts = useStreamQueries(CNKUser).contracts; // retrieves the CNKUser 
-  
-  // <InputDialog { ...offerProps } />
-  // <TableCell key={7} className={classes.tableCellButton}>
-  //  <Button color="primary" size="small" className={classes.choiceButton} variant="contained" disabled={t.payload.receiverParty !== party} onClick={() => showOffer(t)}>Give</Button>
-  // </TableCell>
+  const isOnBoarded = cnkUserContracts.length !== 0;
+
+  const [show, setShow] = React.useState(false)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShow(true)
+    }, 200)
+
+    return () => clearTimeout(timeout)
+
+  }, [show])
+
+  if (!show) {
+    return (
+      <Box>
+        <Skeleton variant="rectangular"  height={118} />
+      </Box>
+    );
+  }
+
+  if (!isOnBoarded) {
+    return (
+      <OnBoarding />
+    );
+  } 
+
   return (
     <>
       <Table size="small">
         <TableHead>
           <TableRow className={classes.tableRow}>
-            <TableCell key={0} className={classes.tableCell}>Owner</TableCell>
-            <TableCell key={1} className={classes.tableCell}>Balance</TableCell>
-            <TableCell key={2} className={classes.tableCell}>User Admin (who Authorized this Contract)</TableCell>
-            <TableCell key={3} className={classes.tableCell}>User Name</TableCell>
+            <TableCell key={0} className={classes.tableHeader}>Owner</TableCell>
+            <TableCell key={1} className={classes.tableHeader}>Balance</TableCell>
+            <TableCell key={2} className={classes.tableHeader}>Authorized by</TableCell>
+            <TableCell key={3} className={classes.tableHeader}>User Name</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,4 +69,5 @@ export default function MyCNKUser() {  // TODO: Rename
       </Table>
     </>
   );
+  
 }

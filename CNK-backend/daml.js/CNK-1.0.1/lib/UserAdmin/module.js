@@ -41,7 +41,7 @@ exports.GrantCNKUserRights = {
 
 
 exports.CNKUserRequest = {
-  templateId: 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd:UserAdmin:CNKUserRequest',
+  templateId: 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5:UserAdmin:CNKUserRequest',
   keyDecoder: damlTypes.lazyMemo(function () { return jtv.constant(undefined); }),
   keyEncode: function () { throw 'EncodeError'; },
   decoder: damlTypes.lazyMemo(function () { return jtv.object({owner: damlTypes.Party.decoder, useradmin: damlTypes.Party.decoder, username: damlTypes.Text.decoder, reason: damlTypes.Text.decoder, }); }),

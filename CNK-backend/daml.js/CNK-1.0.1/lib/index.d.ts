@@ -2,4 +2,4 @@ import * as CNK from './CNK';
 export { CNK } ;
 import * as UserAdmin from './UserAdmin';
 export { UserAdmin } ;
-export declare const packageId = 'e48330896381fa61ddc9d18649728351516c94f64b05a228ad879be1b4cd0bdd';
+export declare const packageId = 'b8c927b28773920b65615a7844e09d57777171e85bab2ab6d88134d8cc9128a5';
