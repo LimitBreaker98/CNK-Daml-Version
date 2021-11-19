@@ -9,7 +9,7 @@ direct_transfer_CNK_test : Script ()
 direct_transfer_CNK_test = do
   carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
   jorge <- allocatePartyWithHint "Jorge" (PartyIdHint "Jorge")
-  dptoIndustrialUniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
+  dptoIndustrialUniandesAdmin <- allocatePartyWithHint "UserAdmin" (PartyIdHint "UserAdmin")
 
   -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
   -- to be a Contract Id. This can be used to fetch the actual contract.
@@ -57,7 +57,7 @@ outside_parties_requesting_access_scenario = do
   outsider_1 <- allocatePartyWithHint "Outsider_1" (PartyIdHint "Outsider_1")
   outsider_2 <- allocatePartyWithHint "Outsider_2" (PartyIdHint "Outsider_2")
   carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
-  uniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
+  uniandesAdmin <- allocatePartyWithHint "UserAdmin" (PartyIdHint "UserAdmin")
 
   -- Notice that the Cid suffix stands for the value being stored in the left hand side variable
   -- to be a Contract Id. This can be used to fetch the actual contract.
@@ -117,7 +117,7 @@ failure_scenarios_checks = do
   carlos <- allocatePartyWithHint "Carlos" (PartyIdHint "Carlos")
   outsider_1 <- allocatePartyWithHint "Outsider_1" (PartyIdHint "Outsider_1")
   outsider_2 <- allocatePartyWithHint "Outsider_2" (PartyIdHint "Outsider_2")
-  uniandesAdmin <- allocatePartyWithHint "UniandesAdmin" (PartyIdHint "UniandesAdmin")
+  uniandesAdmin <- allocatePartyWithHint "UserAdmin" (PartyIdHint "UserAdmin")
 
   outsider_1_CNKUserRequestCid <- submit outsider_1 do
     createCmd CNKUserRequest with

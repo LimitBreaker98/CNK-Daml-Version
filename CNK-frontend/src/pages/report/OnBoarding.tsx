@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import SendIcon from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { fetchWellKnownParties } from "./wellKnownParties";
 
 export function OnBoarding() {
   const party = useParty()
@@ -35,7 +36,11 @@ export function OnBoarding() {
     setReason(event.target.value);
   };
   const handleUserAdminSelection = (event: any) => {
-    setUseradmin(event.target.value);
+    async function selectUserAdmin() {
+      const wkp = await fetchWellKnownParties();
+      setUseradmin(wkp.parties!.userAdminParty);
+    }
+    selectUserAdmin();
   };
 
   function submitRequest() {

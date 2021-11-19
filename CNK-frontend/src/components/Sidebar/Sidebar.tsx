@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import { Location } from "history";
 import Drawer from "@material-ui/core/Drawer";
@@ -8,6 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import useStyles from "./styles";
 import { useParty, useStreamQueries } from "@daml/react";
 import { CNKUser } from "@daml.js/CNK-1.0.1/lib/CNK";
+import { fetchWellKnownParties } from "../../pages/report/wellKnownParties";
 
 type SidebarLinkProps = {
   path : string
@@ -19,15 +20,27 @@ const Sidebar = ({ location } : RouteComponentProps) => {
   const classes = useStyles();
   const party = useParty();
   const cnkUserContracts = useStreamQueries(CNKUser).contracts; // retrieves the CNKUser 
-  const isOnBoarded = cnkUserContracts.length !== 0 && party !== "UniandesAdmin";
+
+  const [isAdmin, setAdmin] = useState(false);
+
+  useEffect(() => {
+    async function fetchAdmin() {
+      let wkp = await fetchWellKnownParties();
+      setAdmin(wkp.parties?.userAdminParty === party);
+    }
+
+    fetchAdmin()
+  }, [])
+
+  const isOnBoarded = cnkUserContracts.length !== 0 && !isAdmin;
 
   return (
     <Drawer open variant="permanent" className={classes.drawer} classes={{ paper: classes.drawer }}>
       <div className={classes.toolbar} />
       <List style={{ width: "100%" }}>
         {isOnBoarded && <SidebarLink key={0} label="Transfer Proposals" path="/app/my-transfer-proposals" location={location} /> }
-        <SidebarLink key={1} label={party === "UniandesAdmin" ? "All Onboarded CNK Users" : "CNK User"} path="/app/my-cnk-user" location={location} />
-        {party === "UniandesAdmin" && <SidebarLink key={2} label="Onboarding Requests" path="/app/useradmin" location={location} /> }
+        <SidebarLink key={1} label={isAdmin ? "All Onboarded CNK Users" : "CNK User"} path="/app/my-cnk-user" location={location} />
+        {isAdmin && <SidebarLink key={2} label="Onboarding Requests" path="/app/useradmin" location={location} /> }
         {isOnBoarded && <SidebarLink key={3} label="New Transfer Proposal" path="/app/new-transfer-proposal" location={location} />}
       </List>
     </Drawer>

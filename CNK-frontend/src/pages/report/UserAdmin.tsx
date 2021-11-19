@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect }  from "react";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -22,7 +22,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { fetchWellKnownParties } from "./wellKnownParties";
 
 
 export default function UserAdmin() {
@@ -33,6 +33,7 @@ export default function UserAdmin() {
   const cnkUserRequests = useStreamQueries(CNKUserRequest, asUserAdmin).contracts;
   const cnkUsers = useStreamQueries(CNKUser, asUserAdmin).contracts;
   const [initialBalance, setInitialBalance] = useState("0");
+  const [isAdmin, setAdmin] = useState(false);
 
   const handleBalanceChange = (event: any) => {
     setInitialBalance(String(event.target.value));
@@ -46,9 +47,22 @@ export default function UserAdmin() {
     ledger.exercise(CNKUserRequest.RejectCNKUserRequest, cnkUserRequest.contractId, {});
   }
 
-  function isAdmin() {
-    return party === "UniandesAdmin"
-  }
+  // async function isAdmin() {
+  //   async function getWKP() {
+  //     const wkp = await fetchWellKnownParties();
+  //     return wkp.parties!.userAdminParty === party;
+  //   }
+  //   return await getWKP();
+  // }
+
+  useEffect(() => {
+    async function fetchAdmin() {
+      let wkp = await fetchWellKnownParties();
+      setAdmin(wkp.parties?.userAdminParty === party);
+    }
+
+    fetchAdmin()
+  }, [])
 
   function getComponent() {
     return (
@@ -111,7 +125,7 @@ export default function UserAdmin() {
     );
   }
 
-  if (isAdmin()) {
+  if (isAdmin) {
     return getComponent();
   }
   else {

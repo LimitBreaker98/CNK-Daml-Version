@@ -8,8 +8,8 @@ build:
 
 deploy: build
 	mkdir -p deploy
-	cp ./.daml/dist/*.dar deploy
-	# cd ui && zip -r ../deploy/CNK-Tesis-Final-CNK-frontend.zip build
+	cp CNK-backend/.daml/dist/*.dar deploy
+	cd CNK-frontend && zip -r ../deploy/CNK-Tesis-Final-CNK-frontend.zip build
 
 clean: 
 	cd CNK-backend && rm -rf .daml

@@ -5,7 +5,7 @@ version: 1.0.1
 parties:
 - Carlos
 - Jorge
-- UniandesAdmin
+- UserAdmin
 init-script: Main:direct_transfer_CNK_test
 dependencies:
   - daml-prim
